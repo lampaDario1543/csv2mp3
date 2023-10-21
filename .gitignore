@@ -4,6 +4,8 @@ img/
 no-youtube-dl/
 teste_lyrics/
 dist/
+installer/
+testing/
 *.spec
 *.txt
 *.csv

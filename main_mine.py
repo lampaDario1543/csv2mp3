@@ -14,16 +14,12 @@ import msvcrt #per chiudere il programma
 from colorama import Fore, Style, init # per colorare gli errori
 import sys
 
-os.system("title csv2mp3")
-
-user_profile = os.environ['USERPROFILE']
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id="5ac01819a18e445c824ea3120d950b13",
                                                            client_secret="15d8e6f00d0f4f858b4273d7456dd07c"))
-pathOut = os.path.join(user_profile, 'Desktop')
-pathOut+=f'\csv2mp3\\'
+os.system("title csv2mp3")
 
 init()#coloram
-#AudioSegment.ffmpeg = r"C:\PATH_Programs\ffmpeg.exe"
+AudioSegment.ffmpeg = r"C:\PATH_Programs\ffmpeg.exe"
 #caratteri proibiti e replace per il nome del file e della cartella
 
 rules = [
@@ -62,8 +58,8 @@ def getCsvPath(): #ottengo il percorso del file csv tramite argomenti
 def run(path):
     songs=getCSV(path)
     DIM=len(songs)
-    if not os.path.exists(pathOut):
-        os.mkdir(pathOut)
+    if not os.path.exists('csv2mp3/'):
+        os.mkdir('csv2mp3/')
     for i in range(DIM):
         print("Download "+str(i+1)+" di "+str(DIM)+" - "+ str(((i+1)/DIM)*100)[0:4]+"% canzoni scaricate, mancanti: "+str(DIM-(i+1)))
         video_url = getUrl(songs[i]['title']+' '+songs[i]['artist'],songs[i])
@@ -75,16 +71,16 @@ def run(path):
             songs[i]['album']=songs[i]['album'].replace(rule[0],rule[1])
 
         track=getInfo(songs[i]['title']+' '+songs[i]['artist'])
-        if not os.path.exists(pathOut+songs[i]['album']): #se la cartella dell'album non esiste
-            os.mkdir(pathOut+songs[i]['album']) #creo la cartella col nome dell'album
-            img=open(pathOut+''+songs[i]['album']+"/thumb.jpg","wb") #creo l'immagine dell'album
+        if not os.path.exists('csv2mp3/'+songs[i]['album']): #se la cartella dell'album non esiste
+            os.mkdir("csv2mp3/"+songs[i]['album']) #creo la cartella col nome dell'album
+            img=open("csv2mp3/"+songs[i]['album']+"/thumb.jpg","wb") #creo l'immagine dell'album
             response=requests.get(track['album']['images'][0]['url']) #richiedo l'url dell'immagine dell'album
             img.write(response.content) #scrivo l'immagine
             img.close() #chiudo l'immagine
         
         #scarico la canzone
 
-        filename = pathOut+f"{songs[i]['album']}/{songs[i]['title']}.temp" #creo il file temporaneo
+        filename = f"csv2mp3/{songs[i]['album']}/{songs[i]['title']}.temp" #creo il file temporaneo
         video = YouTube(video_url) #ottengo il video
         audio_streams = video.streams.filter(only_audio=True)
         audio_streams = audio_streams.order_by('abr')
@@ -96,27 +92,27 @@ def run(path):
         #converto il file in mp3
 
         print("Conversione di "+songs[i]['title']+" in mp3")
-        audio=AudioSegment.from_file(pathOut+songs[i]['album']+"/"+songs[i]['title']+".temp")
-        audio.export(pathOut+songs[i]['album']+"/"+songs[i]['title']+".mp3", format="mp3")
-        os.remove(pathOut+songs[i]['album']+"/"+songs[i]['title']+".temp")
+        audio=AudioSegment.from_file("csv2mp3/"+songs[i]['album']+"/"+songs[i]['title']+".temp")
+        audio.export("csv2mp3/"+songs[i]['album']+"/"+songs[i]['title']+".mp3", format="mp3")
+        os.remove("csv2mp3/"+songs[i]['album']+"/"+songs[i]['title']+".temp")
 
         #aggiungo le informazioni alla canzone
 
         print("\nAggiunta dati a: "+str(i+1))
-        audio=eyed3.load(pathOut+songs[i]['album']+"/"+songs[i]['title']+".mp3")
+        audio=eyed3.load("csv2mp3/"+songs[i]['album']+"/"+songs[i]['title']+".mp3")
         audio.tag.title=track['name']
         audio.tag.album=track['album']['name']
         audio.tag.artist=songs[i]['artist']
         audio.tag.track_num=track['track_number'], track['album']['total_tracks']
         audio.tag.recording_date=int(track['album']['release_date'][0:4])
-        with open(pathOut+songs[i]['album']+"/thumb.jpg", "rb") as cover_art:
+        with open("csv2mp3/"+songs[i]['album']+"/thumb.jpg", "rb") as cover_art:
             audio.tag.images.set(3, cover_art.read(), "image/jpeg")
         audio.tag.save()
         os.system('cls')
 
         #aggiorno il file last.txt con l'ultima canzone scaricata
 
-        last=open(pathOut+"/last.txt","w",encoding="utf8")
+        last=open("last.txt","w",encoding="utf8")
         last.write(track['name'])
         last.write("\n"+str(datetime.today()));
         last.close()

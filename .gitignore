@@ -1,12 +1,16 @@
+# files 
 .cache
+*.spec
+*.csv
+*.txt 
+!license.txt
+# folders
+csv/
+readme-image/
 build/
 img/
 no-youtube-dl/
-teste_lyrics/
+test_lyrics/
 dist/
 installer/
 testing/
-*.spec
-*.txt
-!license.txt
-*.csv

@@ -1,1 +1,0 @@
-pyinstaller --onefile --console --icon "C:/Users/tomma/projects/python/230829_spotiTransfer_v2/img/icon.ico" --name "csv2mp3" --collect-all ytmusicapi  main-v2.py

@@ -4,6 +4,7 @@
 
 - [Introduction](#intro)
 - [Sample of input](#sample)
+- [Releases](https://github.com/lampaDario1543/csv2mp3/releases)
 
 ---
 

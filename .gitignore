@@ -1,5 +1,8 @@
 .cache
 build/
+img/
+no-youtube-dl/
+teste_lyrics/
 dist/
 *.spec
 *.txt

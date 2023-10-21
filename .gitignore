@@ -8,4 +8,5 @@ installer/
 testing/
 *.spec
 *.txt
+!license.txt
 *.csv

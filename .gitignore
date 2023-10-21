@@ -1,1 +1,8 @@
 .cache
+dist/
+build/
+command.txt
+csv2mp3.spec
+last.txt
+main-v2.spec
+*.csv

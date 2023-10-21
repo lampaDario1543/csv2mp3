@@ -71,7 +71,7 @@ def run(path):
             songs[i]['album']=songs[i]['album'].replace(rule[0],rule[1])
 
         track=getInfo(songs[i]['title']+' '+songs[i]['artist'])
-        if not os.path.exists(songs[i]['album']): #se la cartella dell'album non esiste
+        if not os.path.exists('csv2mp3/'+songs[i]['album']): #se la cartella dell'album non esiste
             os.mkdir("csv2mp3/"+songs[i]['album']) #creo la cartella col nome dell'album
             img=open("csv2mp3/"+songs[i]['album']+"/thumb.jpg","wb") #creo l'immagine dell'album
             response=requests.get(track['album']['images'][0]['url']) #richiedo l'url dell'immagine dell'album

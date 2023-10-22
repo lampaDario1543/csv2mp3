@@ -12,7 +12,6 @@ import time as t
 import sys #per prendere il path del file
 import msvcrt #per chiudere il programma
 from colorama import Fore, Style, init # per colorare gli errori
-import sys
 
 os.system("title csv2mp3")
 

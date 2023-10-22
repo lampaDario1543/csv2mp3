@@ -4,6 +4,7 @@
 *.csv
 *.txt 
 !license.txt
+!requirements.txt
 # folders
 csv/
 readme-image/

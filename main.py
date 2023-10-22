@@ -40,21 +40,21 @@ rules = [
 
 def getCsvPath(): #ottengo il percorso del file csv tramite argomenti
     if len(sys.argv) < 2:
-        print("Inserisci il percorso del file csv:")
+        print("Insert the path of the CSV file:")
         path=input("> ")
         if(not path.lower().endswith('.csv')):
-            print(f"{Fore.RED}Errore: Il file deve essere un csv.{Style.RESET_ALL}\n\n")
+            print(f"{Fore.RED}Error: The file must be CSV.{Style.RESET_ALL}\n\n")
             return None
         elif(not os.path.exists(path)):
-            print(f"{Fore.RED}Errore: Il file non esiste.{Style.RESET_ALL}\n\n")
+            print(f"{Fore.RED}Error: The file path doesn't exists.{Style.RESET_ALL}\n\n")
             return None
         return path
     path = ' '.join(sys.argv[1:])
     if(not path.lower().endswith('.csv')):
-        print(f"{Fore.RED}Errore: Il file deve essere un csv.{Style.RESET_ALL}\n\n")
+        print(f"{Fore.RED}Error: The file must be CSV.{Style.RESET_ALL}\n\n")
         return None
     if(not os.path.exists(path)):
-        print(f"{Fore.RED}Errore: Il file non esiste.{Style.RESET_ALL}\n\n")
+        print(f"{Fore.RED}Error: The file path doesn't exists.{Style.RESET_ALL}\n\n")
         return None
     return path
 
@@ -64,7 +64,7 @@ def run(path):
     if not os.path.exists(pathOut):
         os.mkdir(pathOut)
     for i in range(DIM):
-        print("Download "+str(i+1)+" di "+str(DIM)+" - "+ str(((i+1)/DIM)*100)[0:4]+"% canzoni scaricate, mancanti: "+str(DIM-(i+1)))
+        print("Download "+str(i+1)+" of "+str(DIM)+" - "+ str(((i+1)/DIM)*100)[0:4]+"% songs downloaded, missing: "+str(DIM-(i+1)))
         video_url = getUrl(songs[i]['title']+' '+songs[i]['artist'],songs[i])
         
         #rimuovo i caratteri proibiti per il nome del file e della cartella
@@ -94,14 +94,14 @@ def run(path):
 
         #converto il file in mp3
 
-        print("Conversione di "+songs[i]['title']+" in mp3")
+        print("Conversion of "+songs[i]['title']+" in mp3")
         audio=AudioSegment.from_file(pathOut+songs[i]['album']+"/"+songs[i]['title']+".temp")
         audio.export(pathOut+songs[i]['album']+"/"+songs[i]['title']+".mp3", format="mp3")
         os.remove(pathOut+songs[i]['album']+"/"+songs[i]['title']+".temp")
 
         #aggiungo le informazioni alla canzone
 
-        print("\nAggiunta dati a: "+str(i+1))
+        print("\nAdding data to: "+str(i+1))
         audio=eyed3.load(pathOut+songs[i]['album']+"/"+songs[i]['title']+".mp3")
         audio.tag.title=track['name']
         audio.tag.album=track['album']['name']
@@ -119,8 +119,8 @@ def run(path):
         last.write(track['name'])
         last.write("\n"+str(datetime.today()));
         last.close()
-    print("Download completato con successo!\n\n")
-    print("Premi un tasto per uscire...")
+    print("Download completed with success!\n\n")
+    print("Press a button to exit...")
     msvcrt.getch()
     sys.exit()
 
@@ -141,22 +141,22 @@ def getCSV(file:str) -> list: #ritorno la lista di canzoni presa dal file csv
         for row in csv_reader:
             songs.append(row)
         if(len(songs)==0):
-            print(f"{Fore.RED}Errore: Il file '{file}' è vuoto.{Style.RESET_ALL}\n\n")
-            print("Premi un tasto per uscire...")
+            print(f"{Fore.RED}Error: The file '{file}' is empty.{Style.RESET_ALL}\n\n")
+            print("Press a button to exit...")
             msvcrt.getch()
             sys.exit()
         required_fields = ['title', 'artist', 'album']
         if(len(songs[0].keys())!=len(required_fields)):
-            print(f"{Fore.RED}Errore: I campi del file devono essere: {len(required_fields)} {Style.RESET_ALL}\n\n")
-            print("Premi un tasto per uscire...")
+            print(f"{Fore.RED}Error: The fields of the CSV must be: {len(required_fields)} {Style.RESET_ALL}\n\n")
+            print("Press a button to exit...")
             msvcrt.getch()
             sys.exit()
         for r in required_fields:
             try:
                 songs[0][r]
             except Exception as e:
-                print(f"{Fore.RED}Errore: I campi del file devono essere: {required_fields} {Style.RESET_ALL}\n\n")
-                print("Premi un tasto per uscire...")
+                print(f"{Fore.RED}Error: The fields of the CSV must be: {required_fields} {Style.RESET_ALL}\n\n")
+                print("Press a button to exit...")
                 msvcrt.getch()
                 sys.exit()
     return songs
@@ -170,7 +170,7 @@ def getInfo(title): #ritorno le informazioni della canzone
 if __name__=='__main__':
     path=getCsvPath() #ottengo il percorso del file csv
     if(path==None):
-        print("Premi un tasto per uscire...")
+        print("Press a button to exit...")
         msvcrt.getch()
         sys.exit()
     else:

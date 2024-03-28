@@ -13,6 +13,8 @@ import sys #per prendere il path del file
 import msvcrt #per chiudere il programma
 from colorama import Fore, Style, init # per colorare gli errori
 import sys
+import json
+from bs4 import BeautifulSoup
 
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id="5ac01819a18e445c824ea3120d950b13",
                                                            client_secret="15d8e6f00d0f4f858b4273d7456dd07c"))
@@ -34,6 +36,29 @@ rules = [
     ('|', ''),
     ('.', '')
 ]
+
+def get_song_lyrics(artist, song_title): #ottiene il testo di una canzone.
+    artist = artist.lower().replace(' ', '-')
+    song_title = song_title.lower().replace(' ', '-')
+    url = f"https://lyrics.lyricfind.com/lyrics/{artist}-{song_title}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        script_tag = soup.find("script", id="__NEXT_DATA__", type="application/json")
+        if script_tag:
+            json_data = json.loads(script_tag.string)
+            try:
+                lyrics = json_data['props']['pageProps']['songData']['track']['lyrics']
+                return lyrics
+            except KeyError:
+                print("Lyrics not found.")
+                return ""
+        else:
+            print("Script tag not found.")
+            return ""
+    else:
+        print("Failed to retrieve lyrics.")
+        return ""
 
 def getCsvPath(): #ottengo il percorso del file csv tramite argomenti
     if len(sys.argv) < 2:
@@ -105,6 +130,7 @@ def run(path):
         audio.tag.artist=songs[i]['artist']
         audio.tag.track_num=track['track_number'], track['album']['total_tracks']
         audio.tag.recording_date=int(track['album']['release_date'][0:4])
+        audio.tag.lyrics.set(get_song_lyrics(songs[i]['artist'], songs[i]['title']))
         with open("csv2mp3/"+songs[i]['album']+"/thumb.jpg", "rb") as cover_art:
             audio.tag.images.set(3, cover_art.read(), "image/jpeg")
         audio.tag.save()
